@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from './auth/shared/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +9,51 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'DigiprizmaDemoApp';
+  username:string;
+  navbarOpen:boolean;
+  sidebarOpen:boolean;
+
+  constructor(private authService: AuthService, private router:Router) {
+    this.navbarOpen = false;
+    this.sidebarOpen = false;
+
+    if(this.username === null){
+     this.router.navigateByUrl('/login');
+    }else{
+      this.router.navigateByUrl('/');
+    }
+   }
+
+  ngOnInit(): void {
+
+    this.navbarOpen = false;
+    this.sidebarOpen = false;
+    if(this.username === null){
+      this.router.navigateByUrl('/login');
+     }else{
+       this.router.navigateByUrl('/');
+     }
+  }
+
+
+  toggleNavbar() {
+    console.log("toogle nav bar");
+    this.navbarOpen = !this.navbarOpen;
+  }
+
+  toggleSidebar() {
+    console.log("toogle side bar");
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  logout(){
+    this.authService.clearStorage();
+    this.router.navigateByUrl('/login');
+  }
+
+  isAuthenticated(){
+    this.username = this.authService.getUserName();
+    console.log('is Authenticated ++ '+this.username === null);
+    return this.username === null;
+  }
 }
