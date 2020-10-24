@@ -37,12 +37,10 @@ export class AppComponent {
 
 
   toggleNavbar() {
-    console.log("toogle nav bar");
     this.navbarOpen = !this.navbarOpen;
   }
 
   toggleSidebar() {
-    console.log("toogle side bar");
     this.sidebarOpen = !this.sidebarOpen;
   }
 
@@ -53,7 +51,6 @@ export class AppComponent {
 
   isAuthenticated(){
     this.username = this.authService.getUserName();
-    console.log('is Authenticated ++ '+this.username === null);
     return this.username === null;
   }
 }

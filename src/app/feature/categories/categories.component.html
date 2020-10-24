@@ -3,7 +3,6 @@
             <div class="row">
                 <div class="page-title">
                     <h3>Categorie</h3>
-                    <p class="text-subtitle text-muted">categories works ! </p>
                 </div>
                 <div class="col-12 col-md-12 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class='breadcrumb-header'>
@@ -28,27 +27,38 @@
                     <div class="card-content">
                     <div class="card-body">
                        <!-- <form class="form form-vertical"> -->
+                        <form class="form form-vertical" [formGroup]="categoryForm" (ngSubmit)="addCategory()" >
+                            
+                            <div class="alert alert-danger" role="alert" *ngIf='this.isError === true' >
+                                {{createMessage}}
+                            </div>
+                            <div class="alert alert-info" role="alert" *ngIf='this.isError === false' >
+                                {{createMessage}}
+                            </div>
+
                         <div class="form-body">
                             <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                <input type="text" id="first-name-vertical" class="form-control" name="fname"
-                                    placeholder="designation">
+                                    
+                                    <input placeholder="Designation" type="text" id="designation" class="form-control" name="designation" [formControlName]="'designation'" required 
+                                    [ngClass]="!categoryForm.get('designation').valid && categoryForm.get('designation').touched ? 'is-invalid' : ''"
+                                    >
+                                    <div class="invalid-feedback">
+                                        <i class="bx bx-radio-circle"></i>
+                                        Le champ désignation n'est pas valide.
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-group">
-                                <input type="email" id="email-id-vertical" class="form-control" name="email-id"
-                                    placeholder="type">
-                                </div>
-                            </div>
+                           
                             
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="submit" class="btn btn-primary mr-1 mb-1">Valider</button>
-                                <button type="reset" class="btn btn-light-secondary mr-1 mb-1">Annuler</button>
+                                <button type="reset" class="btn btn-light-secondary mr-1 mb-1" (click)="resetCategory()">Annuler</button>
                             </div>
                             </div>
                         </div>
+                        </form>
                       <!--  </form> -->
                     </div>
                     </div>
@@ -59,40 +69,113 @@
                     <div class="card-header">
                     <h4 class="card-title">List des categories</h4>
                     </div>
+                    
                     <!--<div class="card-content"> -->
                     <div class="card-body">
                       <!--  <form class="form form-vertical"> -->
+                        <div class="alert alert-info" role="alert" *ngIf='this.isUpdateError === false' >
+                            {{listMessage}}
+                        </div>
+                        <div class="alert alert-danger" role="alert" *ngIf='this.isUpdateError === true' >
+                            {{listMessage}}
+                        </div>
+                        
                         <table class='table table-striped' id="table1">
+                          
                             <thead>
                                 <tr>
                                     <th>Designation</th>
                                     <th>Type</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Graiden</td>
+                                <tr *ngFor="let c of categories$">
+                                    <td>{{c.designation}}</td>
                                     <td>
                                         <span class="badge bg-success">Active</span>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td>Dale</td>
                                     <td>
-                                        <span class="badge bg-success">Active</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Nathaniel</td>
-                                    <td>
-                                        <span class="badge bg-danger">Inactive</span>
-                                    </td>
-                                </tr>
-                               
-                                <tr>
-                                    <td>Emmanuel</td>
-                                    <td>
-                                        <span class="badge bg-success">Active</span>
+                                    
+                                        <a  data-toggle="tooltip" data-placement="top" title="Supprimer"  data-toggle="modal" data-target="#deleteModal" (click)="openDeleteCategoryDialog(c)">
+                                            <svg class="alert alert-danger" viewBox="0 0 24 24" width="24" height="24" stroke="red" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                        </a>
+
+                                          <div class="modal fade text-left" id="deleteModal" tabindex="-1" aria-labelledby="myModalLabel120"  [ngClass]="{'show': showDeleteModal}" *ngIf="currentCategorie">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-danger">
+                                                <h5 class="modal-title white" id="myModalLabel120">Supprimer Categorie</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDeleteCategoryDialog()">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Etes-vous sûr de vouloir supprimer la categorie {{currentCategorie.designation}} ?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteCategory(c)">
+                                                        
+                                                        <span>Valider</span>
+                                                    </button>
+                                                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeDeleteCategoryDialog()">
+                                                   
+                                                    <span>Annuler</span>
+                                                </button>
+                                                
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+
+
+                                        <a  data-toggle="tooltip" data-placement="top" title="Modifier"  data-toggle="modal" data-target="#updateModal" (click)="openUpdateCategoryDialog(c)">
+                                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                        </a>
+                                       
+                                        <div class="modal fade text-left" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33"  [ngClass]="{'show': showUpdateModal}" *ngIf="currentCategorie">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h4 class="modal-title" id="myModalLabel33">Modifier Categorie</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeUpdateCategoryDialog()">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                            </button>
+                                            </div>
+                                            <form [formGroup]="categoryUpdateForm">
+                                               
+                                            <div class="modal-body">
+
+                                                <div class="alert alert-danger" role="alert" *ngIf='this.isUpdateDialogError === true' >
+                                                    {{listMessage}}
+                                                </div>
+
+                                                
+                                                <div class="form-group">
+                                                    <input placeholder="Designation" type="text" id="currentCategorie" class="form-control" name="currentCategorie" [formControlName]="'designation'" required 
+                                                    [ngClass]="!categoryUpdateForm.get('designation').valid && categoryUpdateForm.get('designation').touched ? 'is-invalid' : ''"
+                                                    >
+                                                    <div class="invalid-feedback">
+                                                        <i class="bx bx-radio-circle"></i>
+                                                        Le champ désignation n'est pas valide.
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary ml-1" data-dismiss="modal" (click)="updateCategory()">
+                                                <span>Valider</span>
+                                                </button>
+                                                <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeUpdateCategoryDialog()">
+                                                <span>Annuler</span>
+                                                </button>
+                                                
+                                            </div>
+                                            </form>
+                                        </div>
+                                        </div>
+                                    </div>
+
                                     </td>
                                 </tr>
                             </tbody>
