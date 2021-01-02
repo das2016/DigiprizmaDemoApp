@@ -8,6 +8,7 @@ import { DashbordComponent } from './feature/dashbord/dashbord.component';
 import { OrdersComponent } from './feature/orders/orders.component';
 import { ProductsComponent } from './feature/products/products.component';
 import { HomeComponent } from './home/home.component';
+import { ProductComponent } from './user-side/product/product.component';
 
 const routes: Routes = [
   { path:'home', component:HomeComponent},
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path:'products', component:ProductsComponent},
   { path:'customers', component:CustomersComponent},
   { path:'orders', component:OrdersComponent},
+  { path:'user/product', component:ProductComponent},
   { path:'' , redirectTo:"/login", pathMatch: 'full'}
 ];
 

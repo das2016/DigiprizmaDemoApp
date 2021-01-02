@@ -53,4 +53,9 @@ export class AppComponent {
     this.username = this.authService.getUserName();
     return this.username === null;
   }
+
+  isAdmin(){
+    this.username = this.authService.getUserName();
+    return this.username !== 'skan';
+  }
 }

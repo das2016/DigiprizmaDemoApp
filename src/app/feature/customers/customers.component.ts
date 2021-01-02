@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CustomerService } from './customer.service';
+import { CustomerDto } from './CustomerDto';
 
 @Component({
   selector: 'app-customers',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CustomersComponent implements OnInit {
 
-  constructor() { }
+  customers$:Array<CustomerDto> = [];
+  isUpdateError:boolean;
+  
+  constructor(private customerService : CustomerService) { }
 
   ngOnInit(): void {
+    this.onGetAllCustomers();
   }
 
+  onGetAllCustomers(){
+    this.customerService.getAllCustomers().subscribe(customers => {
+      this.customers$ = customers;
+      this.customers$.reverse();
+    })
+  }
 }

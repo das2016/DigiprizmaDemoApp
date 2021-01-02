@@ -24,23 +24,36 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "node_modules/primeflex/primeflex.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/quill/dist/quill.core.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/primeng/resources/themes/bootstrap4-light-blue/theme.css",
               "src/styles.css",
               "src/assets/css/app.css",
               "src/assets/css/bootstrap.css",
+             
               "src/assets/vendors/chartjs/Chart.min.css",
-              "src/assets/vendors/perfect-scrollbar/perfect-scrollbar.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "src/assets/vendors/perfect-scrollbar/perfect-scrollbar.css"
+         
+             
+            
+             
             ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
+            "scripts": [ 
+              "node_modules/jquery/dist/jquery.js",
+              "node_modules/datatables.net/js/jquery.dataTables.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js.map",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "src/assets/js/app.js",
               "src/assets/js/main.js",
-              "src/assets/js/feather-icons.js",
               "src/assets/js/vendors.js",
+              "src/assets/js/feather-icons.js",
+              "src/assets/vendors/simple-datatables/simple-datatables.js",
               "src/assets/js/feather-icons/feather.min.js.map",
-               "src/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js",
+              "src/assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js",
               "src/assets/vendors/chartjs/Chart.min.js",
               "src/assets/vendors/apexcharts/apexcharts.min.js",
               "src/assets/js/pages/dashboard.js"

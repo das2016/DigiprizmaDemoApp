@@ -108,7 +108,7 @@ export class CategoriesComponent implements OnInit {
     this.categoryDto.designation = this.categoryForm.get('designation').value;
     this.categoryRequest.categoryDto = this.categoryDto;
     this.categoryService.create(this.categoryRequest).subscribe(data => {
-     this.createMessage = "La categorie a été bien crée."
+     this.createMessage = "La categorie a été bien créée."
      this.isError = false;
      this.isUpdateDialogError = null;
      this.isUpdateError = null;

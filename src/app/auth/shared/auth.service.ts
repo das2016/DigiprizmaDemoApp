@@ -12,7 +12,7 @@ import { LoginResponse } from '../login/login-response.payload';
 })
 export class AuthService {
 
-  url: String ="http://vps-f9968a88.vps.ovh.net:8080"; 
+  url: String ="http://vps-f9968a88.vps.ovh.net:8380"; 
 
   constructor(private httpClient: HttpClient, private localStorage: LocalStorageService) { }
 

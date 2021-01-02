@@ -111,7 +111,13 @@
                                                 </button>
                                                 </div>
                                                 <div class="modal-body">
+                                                    <div class="avatar mr-1">
+                                                        <img src="assets/images/red-warning-sign.jpg" alt="" srcset="">
+                                                    </div>
+                                                    <div>
                                                     <p>Etes-vous sûr de vouloir supprimer la categorie {{currentCategorie.designation}} ?</p>
+                                                    <p style="color: red; font-size: large;">En supprimant cette catégorie, vous supprimez tous les produits associés !!</p>
+                                                </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteCategory(c)">

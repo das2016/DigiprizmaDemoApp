@@ -2,9 +2,9 @@
 <div class="main-content container-fluid">
     <div class="page-title">
         <h3>Commande</h3>
-        <p class="text-subtitle text-muted">orders works ! </p>
+       
     </div>
-    <div class="col-12 col-md-6 order-md-2 order-first">
+    <div class="col-12 col-md-12 order-md-2 order-first">
         <nav aria-label="breadcrumb" class='breadcrumb-header'>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a >Commande</a></li>
@@ -12,4 +12,258 @@
             </ol>
         </nav>
     </div>
+
+
+    <section id="basic-vertical-layouts">
+
+      
+        <div class="col-md-12 col-12">
+            <div class="card">
+                <div class="card-header">
+                <h4 class="card-title">List des Commandes</h4>
+                </div>
+                
+                <!--<div class="card-content"> -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div class="alert alert-info alert-dismissible" role="alert" *ngIf='this.isUpdateError === false' >
+                            {{listMessage}}
+                        </div>
+                        <div class="alert alert-danger alert-dismissible" role="alert" *ngIf='this.isUpdateError === true' >
+                            {{listMessage}}
+                        </div>
+                        
+                        <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
+                               
+                            
+                           
+                        
+                            <div class="dataTable-container">
+
+                                <table class='table table-striped' id="table1">
+                                    
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Client</th>
+                                            <th>Date de commande</th>
+                                            <th>Total</th>
+                                            <th>Statut</th>
+                                            <th>Detail</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let o of orders$">
+                                            <td>{{o.reference}}</td>
+                                            <td>{{getClientName(o)}}</td>
+                                            
+                                            
+                                            <td>{{o.orderDate  | date:'shortDate' }}</td>
+                                            <td>{{o.total}} dt</td>
+                                            <td>
+                                                <span class="badge bg-warning" *ngIf="o.status == 'En Attente'">{{o.status}}</span>
+                                                <span class="badge bg-danger" *ngIf="o.status == 'Annulee'">{{o.status}}</span>
+                                                <span class="badge bg-info" *ngIf="o.status == 'Validee'">{{o.status}}</span>
+                                                <span class="badge bg-success" *ngIf="o.status == 'Expediee'">{{o.status}}</span>
+                                            </td>
+                                            <td>                                
+                                                <a  data-toggle="tooltip" data-placement="top" title="Detail"  data-toggle="modal" data-target="#detailOrderModal" (click)="openDetailOrdertDialog(o)">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                                </a>
+
+                                                <div class="modal fade text-left"  id="detailOrderModal" tabindex="-1" aria-labelledby="myModalLabel120"  [ngClass]="{'show': showdetailOrderModal}" *ngIf="currentOrder">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                        <h5 class="modal-title black" id="myModalLabel120">Detail Commande {{currentOrder.reference}} </h5>
+                                                        <h5 class="modal-title white text-right" >
+                                                            <span class="badge bg-warning" *ngIf="currentOrder.status == 'En Attente'">{{currentOrder.status}}</span>
+                                                            <span class="badge bg-danger" *ngIf="currentOrder.status == 'Annulee'">{{currentOrder.status}}</span>
+                                                            <span class="badge bg-info" *ngIf="currentOrder.status == 'Validee'">{{currentOrder.status}}</span>
+                                                            <span class="badge bg-success" *ngIf="currentOrder.status == 'Expediee'">{{currentOrder.status}}</span>
+                                                            
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeDetailOrdertDialog()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                        </button>
+
+                                                    
+                                                        </div>
+                                                        <div class="modal-body" id="pdfData">
+                                                            <p class="font-weight-bold">Num Facture : fc{{currentOrder.reference}}</p>
+                                                        
+                                                            <address>
+                                                                <strong>{{getClient(o).lastname}}  {{getClient(o).name}}</strong><br>
+                                                                {{getClient(o).adress}}<br>
+                                                                Tunisie<br>
+                                                                <abbr title="Telephone">Tel : </abbr> {{getClient(o).phoneNumber}}
+                                                            </address>
+
+                                                            <table class='table table-striped' id="table1">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Produit</th>
+                                                                        <th>Qté</th>
+                                                                        <th>prix unitaire</th>
+                                                                        <th>Total à payer</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let p of orderProducts$">
+                                                                        <td>{{getProduct(p).designation}}</td>
+                                                                        <td>{{p.quantity}}</td>
+                                                                        <td>{{p.unitPrice}}</td>
+                                                                        <td>{{p.unitPrice*p.quantity}}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                    
+                                                                        <td colspan="3">Total</td>
+                                                                        <td>{{currentOrder.total}}</td>
+                                                                    </tr>
+                                                                </tbody> 
+                                                                </table>       
+                                                        </div>
+                                                        <div class="modal-footer">
+
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="convetToPDF(o)">
+                                                                
+                                                                <span>Telecharger Pdf</span>
+                                                            </button>
+                                                            
+                                                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeDetailOrdertDialog()">
+                                                        
+                                                            <span>Annuler</span>
+                                                        </button>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+
+                                                <a  data-toggle="tooltip" data-placement="top" title="Annuler"  data-toggle="modal" data-target="#cancelOrderModal" (click)="openCancelOrderDialog(o)" *ngIf="o.status !== 'Annulee' && o.status !== 'Validee' && o.status !== 'Expediee' ">
+                                                    <svg class="alert alert-danger" viewBox="0 0 24 24" width="24" height="24" stroke="red" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                                                </a>
+
+                                            
+                                            
+                                                <div class="modal fade text-left" id="cancelOrderModal" tabindex="-1" aria-labelledby="myModalLabel120"  [ngClass]="{'show': showCancelModal}" *ngIf="currentOrder">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-danger">
+                                                        <h5 class="modal-title white" id="myModalLabel120">Annuler la commande {{currentOrder.reference}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeCancelOrderDialog()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Etes-vous sûrs de vouloir Annuler definitivement la commande {{currentOrder.reference}} ?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="cancelOrder(o)">
+                                                                
+                                                                <span>Valider</span>
+                                                            </button>
+                                                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeCancelOrderDialog()">
+                                                        
+                                                            <span>Annuler</span>
+                                                        </button>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+
+                                                <a  data-toggle="tooltip" data-placement="top" title="Expedier"  data-toggle="modal" data-target="#sendOrderModal" (click)="openSendOrderDialog(o)" *ngIf="o.status === 'Validee' ">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="FORESTGREEN" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                                                </a>
+
+
+                                                <div class="modal fade text-left" id="sendOrderModal" tabindex="-1" aria-labelledby="myModalLabel120"  [ngClass]="{'show': showSendModal}" *ngIf="currentOrder">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-success">
+                                                        <h5 class="modal-title white" id="myModalLabel120">Expedier la commande {{currentOrder.reference}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeSendOrderDialog()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Etes-vous sûrs de vouloir d'expedier la commande {{currentOrder.reference}} ?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-success" data-dismiss="modal" (click)="sendOrder(o)">
+                                                                
+                                                                <span>Valider</span>
+                                                            </button>
+                                                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeSendOrderDialog()">
+                                                        
+                                                            <span>Annuler</span>
+                                                        </button>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                                
+
+                                            </td>
+                                            <td>
+
+                                                <a  data-toggle="tooltip" data-placement="top" title="Valider"  data-toggle="modal" data-target="#validateOrderModal" (click)="openValidateOrderDialog(o)" *ngIf="o.status !== 'Annulee' && o.status !== 'Validee' && o.status !== 'Expediee' ">
+                                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="ROYALBLUE" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                                </a>
+
+                                                <div class="modal fade text-left" id="validateOrderModal" tabindex="-1" aria-labelledby="myModalLabel120"  [ngClass]="{'show': showValidateModal}" *ngIf="currentOrder">
+                                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-info">
+                                                        <h5 class="modal-title white" id="myModalLabel120">Valider la commande {{currentOrder.reference}}</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeValidateOrderDialog()">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                        </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Etes-vous sûrs de vouloir Valider definitivement la commande {{currentOrder.reference}} ?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-info" data-dismiss="modal" (click)="validateOrder(o)">
+                                                                
+                                                                <span>Valider</span>
+                                                            </button>
+                                                        <button type="button" class="btn btn-light-secondary" data-dismiss="modal" (click)="closeValidateOrderDialog()">
+                                                        
+                                                            <span>Annuler</span>
+                                                        </button>
+                                                        
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            
+
+                        </div>
+                    </div>
+                  <!--  </form> -->
+                </div>
+                <!-- </div> -->
+            </div>
+            
+        </div>
+
+    </section>
+
+
 </div>
+
+
